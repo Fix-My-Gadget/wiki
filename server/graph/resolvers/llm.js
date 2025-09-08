@@ -22,19 +22,20 @@ module.exports = {
       let providers = []
       for (const dir of dirs) {
         const def = yaml.safeLoad(await fs.readFile(path.join(providersDir, dir, 'definition.yml'), 'utf8'))
+        const props = commonHelper.parseModuleProps(def.props)
+        const currentCfg = _.get(WIKI.config, ['llm', def.key], {})
+        const config = _.map(
+          _.sortBy(_.toPairs(props), ([, val]) => val.order),
+          ([key, cfg]) => ({
+            key,
+            value: JSON.stringify({ ...cfg, value: _.get(currentCfg, key, cfg.default) })
+          })
+        )
         providers.push({
           ...def,
           isEnabled: currentProvider === def.key,
           isAvailable: _.get(def, 'isAvailable', true),
-          config: _.sortBy(_.transform(_.get(WIKI.config, ['llm', def.key], {}), (res, value, key) => {
-            const cfgDef = _.get(commonHelper.parseModuleProps(def.props), key, false)
-            if (cfgDef) {
-              res.push({
-                key,
-                value: JSON.stringify({ ...cfgDef, value })
-              })
-            }
-          }, []), 'key')
+          config
         })
       }
       if (args.orderBy) { providers = _.sortBy(providers, [args.orderBy]) }
