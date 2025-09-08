@@ -1,0 +1,48 @@
+# ===============================================
+# LLM
+# ===============================================
+
+extend type Query {
+  llm: LLMQuery
+}
+
+extend type Mutation {
+  llm: LLMMutation
+}
+
+# -----------------------------------------------
+# QUERIES
+# -----------------------------------------------
+
+type LLMQuery {
+  providers(orderBy: String): [LLMProvider] @auth(requires: ["manage:system"])
+}
+
+# -----------------------------------------------
+# MUTATIONS
+# -----------------------------------------------
+
+type LLMMutation {
+  updateProvider(provider: LLMProviderInput!): DefaultResponse @auth(requires: ["manage:system"])
+}
+
+# -----------------------------------------------
+# TYPES
+# -----------------------------------------------
+
+type LLMProvider {
+  key: String!
+  title: String!
+  description: String
+  logo: String
+  website: String
+  isEnabled: Boolean
+  isAvailable: Boolean
+  config: [KeyValuePair]
+}
+
+input LLMProviderInput {
+  key: String!
+  config: [KeyValuePairInput]
+}
+

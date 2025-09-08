@@ -1,0 +1,8 @@
+admin:
+  llm:
+    title: LLM Providers
+    subtitle: Configure large language model integrations.
+    providers: Providers
+    providerConfig: Provider Configuration
+    providerNoConfig: No configuration required for this provider.
+    configSaveSuccess: LLM configuration saved successfully

@@ -102,6 +102,25 @@ pool:
 bindIP: 0.0.0.0
 
 # ---------------------------------------------------------------------
+# LLM Provider
+# ---------------------------------------------------------------------
+# Settings for Large Language Model integrations.
+
+llm:
+  # Provider to use, possible values: openai, ollama
+  provider: openai
+
+  # ++++++ For openai only ++++++
+  openai:
+    apiKey: YOUR_OPENAI_API_KEY
+    model: gpt-3.5-turbo
+
+  # ++++++ For ollama only ++++++
+  ollama:
+    host: http://localhost:11434
+    model: llama2
+
+# ---------------------------------------------------------------------
 # Log Level
 # ---------------------------------------------------------------------
 # Possible values: error, warn, info (default), verbose, debug, silly

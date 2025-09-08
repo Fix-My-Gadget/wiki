@@ -1,0 +1,12 @@
+mutation($provider: LLMProviderInput!) {
+  llm {
+    updateProvider(provider: $provider) {
+      responseResult {
+        succeeded
+        slug
+        message
+      }
+    }
+  }
+}
+

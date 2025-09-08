@@ -1,0 +1,18 @@
+query {
+  llm {
+    providers(orderBy: "title") {
+      key
+      title
+      description
+      logo
+      website
+      isEnabled
+      isAvailable
+      config {
+        key
+        value
+      }
+    }
+  }
+}
+

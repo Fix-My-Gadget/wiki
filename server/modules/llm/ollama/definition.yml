@@ -1,0 +1,20 @@
+key: ollama
+title: Ollama
+description: Local Ollama runtime for text generation.
+author: requarks.io
+logo: https://static.requarks.io/logo/ollama.svg
+website: https://ollama.ai/
+isAvailable: true
+props:
+  host:
+    type: String
+    title: Host URL
+    hint: Base URL of the Ollama server
+    default: http://localhost:11434
+    order: 1
+  model:
+    type: String
+    title: Model
+    hint: Model name to use
+    default: llama2
+    order: 2
