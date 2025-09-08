@@ -5,12 +5,14 @@
 extend type Query {
   chatAsk(
     question: String!
+    draft: Boolean
   ): ChatResponse! @auth(requires: ["read:pages"])
 }
 
 extend type Mutation {
   chatAsk(
     question: String!
+    draft: Boolean
   ): ChatResponse! @auth(requires: ["read:pages"])
 }
 
@@ -20,5 +22,11 @@ extend type Mutation {
 
 type ChatResponse {
   answer: String!
+  pageDraft: ChatPageDraft
+}
+
+type ChatPageDraft {
+  title: String!
+  content: String!
 }
 

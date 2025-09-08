@@ -238,8 +238,18 @@ export default {
   mounted() {
     this.$store.set('editor/mode', this.initMode || 'create')
 
+    const params = new URLSearchParams(window.location.search)
+    const draftTitle = params.get('draftTitle')
+    const draftContent = params.get('draftContent')
+
     this.initContentParsed = this.initContent ? Base64.decode(this.initContent) : ''
+    if (draftContent) {
+      this.initContentParsed = Base64.decode(draftContent)
+    }
     this.$store.set('editor/content', this.initContentParsed)
+    if (draftTitle) {
+      this.$store.set('page/title', draftTitle)
+    }
     if (this.mode === 'create' && !this.initEditor) {
       _.delay(() => {
         this.dialogEditorSelector = true

@@ -1,0 +1,9 @@
+query ($question: String!, $draft: Boolean) {
+  chatAsk(question: $question, draft: $draft) {
+    answer
+    pageDraft {
+      title
+      content
+    }
+  }
+}
