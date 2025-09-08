@@ -65,15 +65,18 @@
             v-list-item(to='/comments')
               v-list-item-avatar(size='24', tile): v-icon mdi-comment-text-outline
               v-list-item-title {{ $t('admin:comments.title') }}
-            v-list-item(to='/rendering', color='primary')
-              v-list-item-avatar(size='24', tile): v-icon mdi-cogs
-              v-list-item-title {{ $t('admin:rendering.title') }}
-            v-list-item(to='/search', color='primary')
-              v-list-item-avatar(size='24', tile): v-icon mdi-cloud-search-outline
-              v-list-item-title {{ $t('admin:search.title') }}
-            v-list-item(to='/storage', color='primary')
-              v-list-item-avatar(size='24', tile): v-icon mdi-harddisk
-              v-list-item-title {{ $t('admin:storage.title') }}
+              v-list-item(to='/rendering', color='primary')
+                v-list-item-avatar(size='24', tile): v-icon mdi-cogs
+                v-list-item-title {{ $t('admin:rendering.title') }}
+              v-list-item(to='/search', color='primary')
+                v-list-item-avatar(size='24', tile): v-icon mdi-cloud-search-outline
+                v-list-item-title {{ $t('admin:search.title') }}
+              v-list-item(to='/llm', color='primary')
+                v-list-item-avatar(size='24', tile): v-icon mdi-robot-outline
+                v-list-item-title {{ $t('admin:llm.title') }}
+              v-list-item(to='/storage', color='primary')
+                v-list-item-avatar(size='24', tile): v-icon mdi-harddisk
+                v-list-item-title {{ $t('admin:storage.title') }}
           template(v-if='hasPermission([`manage:system`, `manage:api`])')
             v-divider.my-2
             v-subheader.pl-4 {{ $t('admin:nav.system') }}
@@ -160,14 +163,15 @@ const router = new VueRouter({
     { path: '/analytics', component: () => import(/* webpackChunkName: "admin" */ './admin/admin-analytics.vue') },
     { path: '/auth', component: () => import(/* webpackChunkName: "admin" */ './admin/admin-auth.vue') },
     { path: '/comments', component: () => import(/* webpackChunkName: "admin" */ './admin/admin-comments.vue') },
-    { path: '/rendering', component: () => import(/* webpackChunkName: "admin" */ './admin/admin-rendering.vue') },
-    { path: '/editor', component: () => import(/* webpackChunkName: "admin" */ './admin/admin-editor.vue') },
-    { path: '/extensions', component: () => import(/* webpackChunkName: "admin" */ './admin/admin-extensions.vue') },
-    { path: '/logging', component: () => import(/* webpackChunkName: "admin" */ './admin/admin-logging.vue') },
-    { path: '/search', component: () => import(/* webpackChunkName: "admin" */ './admin/admin-search.vue') },
-    { path: '/storage', component: () => import(/* webpackChunkName: "admin" */ './admin/admin-storage.vue') },
-    { path: '/api', component: () => import(/* webpackChunkName: "admin" */ './admin/admin-api.vue') },
-    { path: '/mail', component: () => import(/* webpackChunkName: "admin" */ './admin/admin-mail.vue') },
+      { path: '/rendering', component: () => import(/* webpackChunkName: "admin" */ './admin/admin-rendering.vue') },
+      { path: '/editor', component: () => import(/* webpackChunkName: "admin" */ './admin/admin-editor.vue') },
+      { path: '/extensions', component: () => import(/* webpackChunkName: "admin" */ './admin/admin-extensions.vue') },
+      { path: '/logging', component: () => import(/* webpackChunkName: "admin" */ './admin/admin-logging.vue') },
+      { path: '/search', component: () => import(/* webpackChunkName: "admin" */ './admin/admin-search.vue') },
+      { path: '/llm', component: () => import(/* webpackChunkName: "admin" */ './admin/admin-llm.vue') },
+      { path: '/storage', component: () => import(/* webpackChunkName: "admin" */ './admin/admin-storage.vue') },
+      { path: '/api', component: () => import(/* webpackChunkName: "admin" */ './admin/admin-api.vue') },
+      { path: '/mail', component: () => import(/* webpackChunkName: "admin" */ './admin/admin-mail.vue') },
     { path: '/security', component: () => import(/* webpackChunkName: "admin" */ './admin/admin-security.vue') },
     { path: '/ssl', component: () => import(/* webpackChunkName: "admin" */ './admin/admin-ssl.vue') },
     { path: '/system', component: () => import(/* webpackChunkName: "admin" */ './admin/admin-system.vue') },
