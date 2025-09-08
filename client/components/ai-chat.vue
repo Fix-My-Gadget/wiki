@@ -7,6 +7,7 @@
           div(v-for='(msg, idx) in messages', :key='idx', class='mb-2')
             div.font-weight-bold {{ msg.role === 'user' ? 'You' : 'AI' }}
             div {{ msg.content }}
+            v-btn(v-if='msg.draft', small, color='primary', @click='createPage(msg.draft)') Create Page from Draft
       v-divider
       v-card-actions
         v-text-field(
@@ -21,6 +22,8 @@
 
 <script>
 import chatAsk from '../graph/chat/chat-query-ask.gql'
+import uslug from 'uslug'
+import { Base64 } from 'js-base64'
 
 export default {
   name: 'AiChat',
@@ -52,12 +55,19 @@ export default {
       try {
         const resp = await this.$apollo.query({
           query: chatAsk,
-          variables: { question }
+          variables: { question, pageDraft: true }
         })
-        this.messages.push({ role: 'ai', content: resp.data.chatAsk.answer })
+        this.messages.push({ role: 'ai', content: resp.data.chatAsk.answer, draft: resp.data.chatAsk.draft })
       } catch (err) {
         this.$store.commit('pushGraphError', err)
       }
+    }
+    createPage(draft) {
+      const locale = this.$store.get('page/locale') || 'en'
+      const path = uslug(draft.title)
+      const content = Base64.encode(draft.content)
+      const url = `/e/${locale}/${path}?title=${encodeURIComponent(draft.title)}&content=${encodeURIComponent(content)}`
+      window.location.assign(url)
     }
   }
 }
