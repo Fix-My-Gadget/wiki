@@ -1,0 +1,24 @@
+# ===============================================
+# CHAT
+# ===============================================
+
+extend type Query {
+  chatAsk(
+    question: String!
+  ): ChatResponse! @auth(requires: ["read:pages"])
+}
+
+extend type Mutation {
+  chatAsk(
+    question: String!
+  ): ChatResponse! @auth(requires: ["read:pages"])
+}
+
+# -----------------------------------------------
+# TYPES
+# -----------------------------------------------
+
+type ChatResponse {
+  answer: String!
+}
+
