@@ -37,6 +37,11 @@ module.exports = {
         res.on('end', () => {
           try {
             const json = JSON.parse(data)
+            if (res.statusCode < 200 || res.statusCode >= 300 || json.error) {
+              const errMsg = json.error || `Ollama request failed with status ${res.statusCode}`
+              reject(new Error(errMsg))
+              return
+            }
             resolve(_.get(json, 'response', ''))
           } catch (err) {
             reject(err)

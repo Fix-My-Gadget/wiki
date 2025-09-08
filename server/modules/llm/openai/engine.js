@@ -43,6 +43,11 @@ module.exports = {
         res.on('end', () => {
           try {
             const json = JSON.parse(data)
+            if (res.statusCode < 200 || res.statusCode >= 300 || json.error) {
+              const errMsg = _.get(json, 'error.message', `OpenAI request failed with status ${res.statusCode}`)
+              reject(new Error(errMsg))
+              return
+            }
             resolve(_.get(json, 'choices[0].message.content', ''))
           } catch (err) {
             reject(err)
