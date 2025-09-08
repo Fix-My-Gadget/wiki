@@ -65,18 +65,18 @@
             v-list-item(to='/comments')
               v-list-item-avatar(size='24', tile): v-icon mdi-comment-text-outline
               v-list-item-title {{ $t('admin:comments.title') }}
-              v-list-item(to='/rendering', color='primary')
-                v-list-item-avatar(size='24', tile): v-icon mdi-cogs
-                v-list-item-title {{ $t('admin:rendering.title') }}
-              v-list-item(to='/search', color='primary')
-                v-list-item-avatar(size='24', tile): v-icon mdi-cloud-search-outline
-                v-list-item-title {{ $t('admin:search.title') }}
-              v-list-item(to='/llm', color='primary')
-                v-list-item-avatar(size='24', tile): v-icon mdi-robot-outline
-                v-list-item-title {{ $t('admin:llm.title') }}
-              v-list-item(to='/storage', color='primary')
-                v-list-item-avatar(size='24', tile): v-icon mdi-harddisk
-                v-list-item-title {{ $t('admin:storage.title') }}
+            v-list-item(to='/rendering', color='primary')
+              v-list-item-avatar(size='24', tile): v-icon mdi-cogs
+              v-list-item-title {{ $t('admin:rendering.title') }}
+            v-list-item(to='/search', color='primary')
+              v-list-item-avatar(size='24', tile): v-icon mdi-cloud-search-outline
+              v-list-item-title {{ $t('admin:search.title') }}
+            v-list-item(to='/llm', color='primary')
+              v-list-item-avatar(size='24', tile): v-icon mdi-robot-outline
+              v-list-item-title {{ $t('admin:llm.title') }}
+            v-list-item(to='/storage', color='primary')
+              v-list-item-avatar(size='24', tile): v-icon mdi-harddisk
+              v-list-item-title {{ $t('admin:storage.title') }}
           template(v-if='hasPermission([`manage:system`, `manage:api`])')
             v-divider.my-2
             v-subheader.pl-4 {{ $t('admin:nav.system') }}

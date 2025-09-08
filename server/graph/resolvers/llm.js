@@ -18,14 +18,15 @@ module.exports = {
     async providers (obj, args) {
       const providersDir = path.join(WIKI.SERVERPATH, 'modules/llm')
       const dirs = await fs.readdir(providersDir)
+      const currentProvider = _.get(WIKI.config, 'llm.provider', '')
       let providers = []
       for (const dir of dirs) {
         const def = yaml.safeLoad(await fs.readFile(path.join(providersDir, dir, 'definition.yml'), 'utf8'))
         providers.push({
           ...def,
-          isEnabled: WIKI.config.llm.provider === def.key,
+          isEnabled: currentProvider === def.key,
           isAvailable: _.get(def, 'isAvailable', true),
-          config: _.sortBy(_.transform(_.get(WIKI.config.llm, def.key, {}), (res, value, key) => {
+          config: _.sortBy(_.transform(_.get(WIKI.config, ['llm', def.key], {}), (res, value, key) => {
             const cfgDef = _.get(commonHelper.parseModuleProps(def.props), key, false)
             if (cfgDef) {
               res.push({
@@ -47,10 +48,10 @@ module.exports = {
           _.set(res, val.key, _.get(JSON.parse(val.value), 'v', null))
           return res
         }, {})
-        WIKI.config.llm.provider = args.provider.key
-        WIKI.config.llm[args.provider.key] = cfg
+        _.set(WIKI.config, 'llm.provider', args.provider.key)
+        _.set(WIKI.config, ['llm', args.provider.key], cfg)
         await WIKI.configSvc.saveToDb(['llm'])
-        WIKI.llm.init()
+        if (WIKI.llm) { WIKI.llm.init() }
         return {
           responseResult: graphHelper.generateSuccess('LLM configuration updated successfully')
         }
