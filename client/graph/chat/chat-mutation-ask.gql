@@ -1,0 +1,5 @@
+mutation ($question: String!) {
+  chatAsk(question: $question) {
+    answer
+  }
+}

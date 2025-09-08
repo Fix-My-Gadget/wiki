@@ -83,6 +83,12 @@
 
           slot(name='actions')
 
+          v-tooltip(bottom)
+            template(v-slot:activator='{ on }')
+              v-btn.ml-2(icon, v-on='on', @click='aiChat = true', aria-label='AI Chat')
+                v-icon(color='grey') mdi-robot
+            span AI Chat
+
           //- (mobile) SEARCH TOGGLE
 
           v-btn(
@@ -241,6 +247,7 @@
     page-selector(mode='create', v-model='duplicateOpts.modal', :open-handler='pageDuplicateHandle', :path='duplicateOpts.path', :locale='duplicateOpts.locale')
     page-delete(v-model='deletePageModal', v-if='path && path.length')
     page-convert(v-model='convertPageModal', v-if='path && path.length')
+    ai-chat(v-model='aiChat')
 
     .nav-header-dev(v-if='isDevMode')
       v-icon mdi-alert
@@ -260,7 +267,8 @@ import movePageMutation from 'gql/common/common-pages-mutation-move.gql'
 export default {
   components: {
     PageDelete: () => import('./page-delete.vue'),
-    PageConvert: () => import('./page-convert.vue')
+    PageConvert: () => import('./page-convert.vue'),
+    AiChat: () => import('../ai-chat.vue')
   },
   props: {
     dense: {
@@ -281,6 +289,7 @@ export default {
       movePageModal: false,
       convertPageModal: false,
       deletePageModal: false,
+      aiChat: false,
       locales: siteLangs,
       isDevMode: false,
       duplicateOpts: {
