@@ -1,0 +1,19 @@
+key: openai
+title: OpenAI
+description: OpenAI API for text generation.
+author: requarks.io
+logo: https://static.requarks.io/logo/openai.svg
+website: https://openai.com/
+isAvailable: true
+props:
+  apiKey:
+    type: String
+    title: API Key
+    hint: OpenAI API Key
+    order: 1
+  model:
+    type: String
+    title: Model
+    hint: Model name to use
+    default: gpt-3.5-turbo
+    order: 2
