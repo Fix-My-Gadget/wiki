@@ -24,6 +24,10 @@ let schemas = fs.readdirSync(path.join(WIKI.SERVERPATH, 'graph/schemas'))
 schemas.forEach(schema => {
   typeDefs.push(fs.readFileSync(path.join(WIKI.SERVERPATH, `graph/schemas/${schema}`), 'utf8'))
 })
+// Ensure chat schema is registered
+if (!schemas.includes('chat.graphql')) {
+  typeDefs.push(fs.readFileSync(path.join(WIKI.SERVERPATH, 'graph/schemas/chat.graphql'), 'utf8'))
+}
 
 // Resolvers
 
@@ -34,6 +38,10 @@ const resolversObj = _.values(autoload(path.join(WIKI.SERVERPATH, 'graph/resolve
 resolversObj.forEach(resolver => {
   _.merge(resolvers, resolver)
 })
+// Register chat resolver explicitly
+if (fs.existsSync(path.join(__dirname, 'resolvers/chat.js'))) {
+  _.merge(resolvers, require('./resolvers/chat'))
+}
 
 // Directives
 
