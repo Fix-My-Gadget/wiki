@@ -1,6 +1,6 @@
-mutation($provider: LLMProviderInput!) {
+mutation($provider: LLMProviderInput!, $vectorStore: String!) {
   llm {
-    updateProvider(provider: $provider) {
+    updateProvider(provider: $provider, vectorStore: $vectorStore) {
       responseResult {
         succeeded
         slug

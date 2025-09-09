@@ -16,6 +16,7 @@ extend type Mutation {
 
 type LLMQuery {
   providers(orderBy: String): [LLMProvider] @auth(requires: ["manage:system"])
+  vectorStore: String @auth(requires: ["manage:system"])
 }
 
 # -----------------------------------------------
@@ -23,7 +24,7 @@ type LLMQuery {
 # -----------------------------------------------
 
 type LLMMutation {
-  updateProvider(provider: LLMProviderInput!): DefaultResponse @auth(requires: ["manage:system"])
+  updateProvider(provider: LLMProviderInput!, vectorStore: String!): DefaultResponse @auth(requires: ["manage:system"])
 }
 
 # -----------------------------------------------

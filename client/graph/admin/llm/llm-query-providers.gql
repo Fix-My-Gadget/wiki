@@ -13,6 +13,7 @@ query {
         value
       }
     }
+    vectorStore
   }
 }
 

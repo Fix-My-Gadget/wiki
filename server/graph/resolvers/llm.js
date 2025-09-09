@@ -40,6 +40,9 @@ module.exports = {
       }
       if (args.orderBy) { providers = _.sortBy(providers, [args.orderBy]) }
       return providers
+    },
+    async vectorStore () {
+      return _.get(WIKI.config, 'llm.vectorStore', '')
     }
   },
   LLMMutation: {
@@ -51,6 +54,7 @@ module.exports = {
         }, {})
         _.set(WIKI.config, 'llm.provider', args.provider.key)
         _.set(WIKI.config, ['llm', args.provider.key], cfg)
+        _.set(WIKI.config, 'llm.vectorStore', args.vectorStore)
         await WIKI.configSvc.saveToDb(['llm'])
         if (WIKI.llm) { WIKI.llm.init() }
         return {
