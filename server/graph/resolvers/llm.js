@@ -43,6 +43,10 @@ module.exports = {
     },
     async vectorStore () {
       return _.get(WIKI.config, 'llm.vectorStore', '')
+    },
+    async neo4jConfig () {
+      const cfg = _.get(WIKI.config, 'llm.neo4j', {})
+      return { url: _.get(cfg, 'url', ''), username: _.get(cfg, 'username', '') }
     }
   },
   LLMMutation: {
@@ -55,6 +59,13 @@ module.exports = {
         _.set(WIKI.config, 'llm.provider', args.provider.key)
         _.set(WIKI.config, ['llm', args.provider.key], cfg)
         _.set(WIKI.config, 'llm.vectorStore', args.vectorStore)
+        if (args.neo4jConfig) {
+          _.set(WIKI.config, 'llm.neo4j', {
+            url: args.neo4jConfig.url,
+            username: args.neo4jConfig.username,
+            password: args.neo4jConfig.password
+          })
+        }
         await WIKI.configSvc.saveToDb(['llm'])
         if (WIKI.llm) { WIKI.llm.init() }
         const store = _.get(WIKI.config, 'llm.vectorStore', '')

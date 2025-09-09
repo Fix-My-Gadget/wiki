@@ -44,13 +44,37 @@
             .admin-providerlogo
               img(:src='provider.logo', :alt='provider.title')
           v-card-text
-            v-text-field(
+            v-select(
               outlined,
               :label="$t('admin:llm.vectorStore')",
+              :items='vectorStoreOptions',
               v-model='vectorStore',
               prepend-icon='mdi-database',
               required
             )
+            template(v-if='vectorStore === "neo4j"')
+              v-text-field(
+                outlined,
+                :label="$t('admin:llm.neo4jUrl')",
+                v-model='neo4jConfig.url',
+                prepend-icon='mdi-link',
+                required
+              )
+              v-text-field(
+                outlined,
+                :label="$t('admin:llm.neo4jUser')",
+                v-model='neo4jConfig.username',
+                prepend-icon='mdi-account',
+                required
+              )
+              v-text-field(
+                outlined,
+                :label="$t('admin:llm.neo4jPassword')",
+                v-model='neo4jConfig.password',
+                prepend-icon='mdi-lock',
+                type='password',
+                required
+              )
             .overline.mb-5 {{$t('admin:llm.providerConfig')}}
             .body-2.ml-3(v-if='!provider.config || provider.config.length < 1'): em {{$t('admin:llm.providerNoConfig')}}
             template(v-else, v-for='cfg in provider.config')
@@ -114,7 +138,16 @@ export default {
     return {
       providers: [],
       selectedProvider: '',
-      vectorStore: ''
+      vectorStore: '',
+      neo4jConfig: {
+        url: '',
+        username: '',
+        password: ''
+      },
+      vectorStoreOptions: [
+        { text: 'pgvector', value: 'pgvector' },
+        { text: 'Neo4j', value: 'neo4j' }
+      ]
     }
   },
   computed: {
@@ -134,7 +167,8 @@ export default {
               key: this.selectedProvider,
               config: this.provider.config.map(cfg => ({ ...cfg, value: JSON.stringify({ v: cfg.value.value }) }))
             },
-            vectorStore: this.vectorStore
+            vectorStore: this.vectorStore,
+            neo4jConfig: this.vectorStore === 'neo4j' ? this.neo4jConfig : null
           }
         })
         if (_.get(resp, 'data.llm.updateProvider.responseResult.succeeded', false)) {
@@ -158,6 +192,8 @@ export default {
       fetchPolicy: 'network-only',
       update (data) {
         this.vectorStore = _.get(data, 'llm.vectorStore', '')
+        const cfg = _.get(data, 'llm.neo4jConfig', {})
+        this.neo4jConfig = { url: _.get(cfg, 'url', ''), username: _.get(cfg, 'username', ''), password: '' }
         return _.cloneDeep(data.llm.providers).map(prov => ({
           ...prov,
           config: _.sortBy(prov.config.map(cfg => ({ ...cfg, value: JSON.parse(cfg.value) })), [t => t.value.order])

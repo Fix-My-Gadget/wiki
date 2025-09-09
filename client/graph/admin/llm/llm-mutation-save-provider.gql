@@ -1,6 +1,6 @@
-mutation($provider: LLMProviderInput!, $vectorStore: String!) {
+mutation($provider: LLMProviderInput!, $vectorStore: String!, $neo4jConfig: Neo4jConfigInput) {
   llm {
-    updateProvider(provider: $provider, vectorStore: $vectorStore) {
+    updateProvider(provider: $provider, vectorStore: $vectorStore, neo4jConfig: $neo4jConfig) {
       responseResult {
         succeeded
         slug
