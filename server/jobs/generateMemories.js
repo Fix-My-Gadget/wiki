@@ -9,6 +9,19 @@ module.exports = async () => {
     await WIKI.configSvc.loadFromDb()
     await WIKI.configSvc.applyFlags()
 
+    WIKI.llm = require('../core/llm').init()
+    const vectorStore = _.get(WIKI.config, 'llm.vectorStore', '')
+    if (vectorStore === 'neo4j') {
+      WIKI.memory = require('../modules/memory/neo4j')
+    } else if (vectorStore === 'pgvector') {
+      WIKI.memory = require('../modules/memory/vector')
+    } else {
+      WIKI.memory = null
+    }
+    if (WIKI.memory && _.isFunction(WIKI.memory.init)) {
+      await WIKI.memory.init()
+    }
+
     const memoryNS = _.get(WIKI.config, 'memory.namespace', 'Memory:')
     const pages = await WIKI.models.pages.query().select('id', 'path', 'title', 'content', 'localeCode', 'updatedAt').where('isPublished', true)
 
@@ -41,7 +54,9 @@ module.exports = async () => {
           memoryId = _.get(inserted, '[0].id', inserted.id)
         }
         const embedding = await WIKI.llm.embed(summary)
-        await WIKI.memory.store({ pageId: page.id, memoryPageId: memoryId, embedding })
+        if (WIKI.memory && _.isFunction(WIKI.memory.store)) {
+          await WIKI.memory.store({ pageId: page.id, memoryPageId: memoryId, embedding })
+        }
       }
     }
     await WIKI.models.knex.destroy()
