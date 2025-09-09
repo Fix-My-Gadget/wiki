@@ -61,7 +61,7 @@ export default {
       } catch (err) {
         this.$store.commit('pushGraphError', err)
       }
-    }
+    },
     createPage(draft) {
       const locale = this.$store.get('page/locale') || 'en'
       const path = uslug(draft.title)
