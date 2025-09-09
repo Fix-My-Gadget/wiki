@@ -35,6 +35,10 @@
 - [Special Thanks](#special-thanks)
 - [Contribute](#contributors)
 
+### Memory Bank
+
+Persist page summaries as retrievable "Memory:" pages backed by a vector store. Configure the connection and namespace in `config.yml` under `memory`.
+
 [Follow our Twitter feed](https://twitter.com/requarks) to learn about upcoming updates and new releases!
 
 <h2 align="center">Donate</h2>

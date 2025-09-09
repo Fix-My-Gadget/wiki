@@ -84,6 +84,10 @@ module.exports = {
     await WIKI.models.commentProviders.initProvider()
     await WIKI.models.searchEngines.initEngine()
     await WIKI.models.storage.initTargets()
+    WIKI.memory = require('../modules/memory/vector')
+    if (_.isFunction(WIKI.memory.init)) {
+      await WIKI.memory.init()
+    }
     WIKI.scheduler.start()
 
     await WIKI.models.subscribeToNotifications()

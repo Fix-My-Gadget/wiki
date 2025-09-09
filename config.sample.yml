@@ -164,3 +164,11 @@ dataPath: ./data
 # file uploads.
 
 bodyParserLimit: 5mb
+
+# ---------------------------------------------------------------------
+# Memory Bank / Vector Store
+# ---------------------------------------------------------------------
+memory:
+  namespace: "Memory:"
+  vectorDb:
+    connectionString: postgres://wikijs:wikijsrocks@localhost:5432/wiki
