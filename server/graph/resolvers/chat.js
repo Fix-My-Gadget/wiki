@@ -20,7 +20,7 @@ async function chatAskResolver(obj, args, context) {
   }
 
   let contextDocs = []
-  if (WIKI.memory && _.isFunction(WIKI.llm.embed)) {
+  if (WIKI.memory && _.isFunction(WIKI.llm.embed) && _.get(WIKI.config, 'llm.vectorStore')) {
     try {
       const qEmbedding = await WIKI.llm.embed(args.question)
       const memories = await WIKI.memory.search(qEmbedding, { limit: 5 })

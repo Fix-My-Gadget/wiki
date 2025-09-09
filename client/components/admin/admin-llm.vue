@@ -44,6 +44,13 @@
             .admin-providerlogo
               img(:src='provider.logo', :alt='provider.title')
           v-card-text
+            v-text-field(
+              outlined,
+              :label="$t('admin:llm.vectorStore')",
+              v-model='vectorStore',
+              prepend-icon='mdi-database',
+              required
+            )
             .overline.mb-5 {{$t('admin:llm.providerConfig')}}
             .body-2.ml-3(v-if='!provider.config || provider.config.length < 1'): em {{$t('admin:llm.providerNoConfig')}}
             template(v-else, v-for='cfg in provider.config')
@@ -106,7 +113,8 @@ export default {
   data () {
     return {
       providers: [],
-      selectedProvider: ''
+      selectedProvider: '',
+      vectorStore: ''
     }
   },
   computed: {
@@ -125,7 +133,8 @@ export default {
             provider: {
               key: this.selectedProvider,
               config: this.provider.config.map(cfg => ({ ...cfg, value: JSON.stringify({ v: cfg.value.value }) }))
-            }
+            },
+            vectorStore: this.vectorStore
           }
         })
         if (_.get(resp, 'data.llm.updateProvider.responseResult.succeeded', false)) {
@@ -147,10 +156,13 @@ export default {
     providers: {
       query: providersQuery,
       fetchPolicy: 'network-only',
-      update: (data) => _.cloneDeep(data.llm.providers).map(prov => ({
-        ...prov,
-        config: _.sortBy(prov.config.map(cfg => ({ ...cfg, value: JSON.parse(cfg.value) })), [t => t.value.order])
-      })),
+      update (data) {
+        this.vectorStore = _.get(data, 'llm.vectorStore', '')
+        return _.cloneDeep(data.llm.providers).map(prov => ({
+          ...prov,
+          config: _.sortBy(prov.config.map(cfg => ({ ...cfg, value: JSON.parse(cfg.value) })), [t => t.value.order])
+        }))
+      },
       watchLoading (isLoading) {
         this.$store.commit(`loading${isLoading ? 'Start' : 'Stop'}`, 'admin-llm-refresh')
       }

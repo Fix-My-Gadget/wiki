@@ -109,6 +109,14 @@ bindIP: 0.0.0.0
 llm:
   # Provider to use, possible values: openai, ollama
   provider: openai
+  # Vector store provider: pgvector, neo4j
+  vectorStore: neo4j
+
+  # ++++++ For neo4j only ++++++
+  neo4j:
+    url: bolt://localhost:7687
+    username: neo4j
+    password: changeme
 
   # ++++++ For openai only ++++++
   openai:

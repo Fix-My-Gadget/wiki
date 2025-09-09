@@ -5,4 +5,5 @@ admin:
     providers: Providers
     providerConfig: Provider Configuration
     providerNoConfig: No configuration required for this provider.
+    vectorStore: Vector Store Connection
     configSaveSuccess: LLM configuration saved successfully
