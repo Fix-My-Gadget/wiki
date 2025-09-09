@@ -240,6 +240,21 @@ export default {
 
     this.initContentParsed = this.initContent ? Base64.decode(this.initContent) : ''
     this.$store.set('editor/content', this.initContentParsed)
+    const params = new URLSearchParams(window.location.search)
+    const draftTitle = params.get('title')
+    const draftContent = params.get('content')
+    if (draftTitle) {
+      this.$store.set('page/title', draftTitle)
+    }
+    if (draftContent) {
+      try {
+        const decoded = Base64.decode(draftContent)
+        this.$store.set('editor/content', decoded)
+        this.initContentParsed = decoded
+      } catch (err) {
+        // ignore decode errors
+      }
+    }
     if (this.mode === 'create' && !this.initEditor) {
       _.delay(() => {
         this.dialogEditorSelector = true

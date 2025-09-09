@@ -1,4 +1,5 @@
 /* global WIKI */
+const _ = require('lodash')
 
 module.exports = {
   Query: {
@@ -45,7 +46,13 @@ async function chatAskResolver(obj, args, context) {
     }
   }
 
-  const answer = await WIKI.llm.generate(args.question, contextDocs)
-  return { answer }
+  const llmResp = await WIKI.llm.generate(args.question, contextDocs, { pageDraft: args.pageDraft })
+  if (_.isString(llmResp)) {
+    return { answer: llmResp }
+  }
+  return {
+    answer: _.get(llmResp, 'answer', ''),
+    draft: _.get(llmResp, 'draft', null)
+  }
 }
 

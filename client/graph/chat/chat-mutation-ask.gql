@@ -1,5 +1,9 @@
-mutation ($question: String!) {
-  chatAsk(question: $question) {
+mutation ($question: String!, $pageDraft: Boolean) {
+  chatAsk(question: $question, pageDraft: $pageDraft) {
     answer
+    draft {
+      title
+      content
+    }
   }
 }
