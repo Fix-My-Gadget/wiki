@@ -15,7 +15,11 @@ module.exports = {
 }
 
 async function chatAskResolver(obj, args, context) {
-  if (!context.req.user || !WIKI.auth.checkAccess(context.req.user, ['read:pages'])) {
+  if (
+    !context.req.user ||
+    context.req.user.id === 2 ||
+    !WIKI.auth.checkAccess(context.req.user, ['read:pages'])
+  ) {
     throw new Error('Forbidden')
   }
 
