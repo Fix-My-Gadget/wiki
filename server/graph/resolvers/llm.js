@@ -57,6 +57,17 @@ module.exports = {
         _.set(WIKI.config, 'llm.vectorStore', args.vectorStore)
         await WIKI.configSvc.saveToDb(['llm'])
         if (WIKI.llm) { WIKI.llm.init() }
+        const store = _.get(WIKI.config, 'llm.vectorStore', '')
+        if (store === 'neo4j') {
+          delete require.cache[require.resolve('../../modules/memory/neo4j')]
+          WIKI.memory = require('../../modules/memory/neo4j')
+        } else if (store === 'pgvector') {
+          delete require.cache[require.resolve('../../modules/memory/vector')]
+          WIKI.memory = require('../../modules/memory/vector')
+        } else {
+          WIKI.memory = null
+        }
+        if (WIKI.memory && _.isFunction(WIKI.memory.init)) { WIKI.memory.init() }
         return {
           responseResult: graphHelper.generateSuccess('LLM configuration updated successfully')
         }
