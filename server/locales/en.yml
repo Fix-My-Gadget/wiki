@@ -5,4 +5,8 @@ admin:
     providers: Providers
     providerConfig: Provider Configuration
     providerNoConfig: No configuration required for this provider.
+    vectorStore: Vector Store Connection
+    neo4jUrl: Neo4j Connection URL
+    neo4jUser: Neo4j Username
+    neo4jPassword: Neo4j Password
     configSaveSuccess: LLM configuration saved successfully

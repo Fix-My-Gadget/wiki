@@ -84,6 +84,17 @@ module.exports = {
     await WIKI.models.commentProviders.initProvider()
     await WIKI.models.searchEngines.initEngine()
     await WIKI.models.storage.initTargets()
+    const vectorStore = _.get(WIKI.config, 'llm.vectorStore', '')
+    if (vectorStore === 'neo4j') {
+      WIKI.memory = require('../modules/memory/neo4j')
+    } else if (vectorStore === 'pgvector') {
+      WIKI.memory = require('../modules/memory/vector')
+    }
+    if (WIKI.memory && _.isFunction(WIKI.memory.init)) {
+      await WIKI.memory.init()
+    } else {
+      WIKI.memory = null
+    }
     WIKI.scheduler.start()
 
     await WIKI.models.subscribeToNotifications()

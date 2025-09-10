@@ -40,6 +40,13 @@ module.exports = {
       }
       if (args.orderBy) { providers = _.sortBy(providers, [args.orderBy]) }
       return providers
+    },
+    async vectorStore () {
+      return _.get(WIKI.config, 'llm.vectorStore', '')
+    },
+    async neo4jConfig () {
+      const cfg = _.get(WIKI.config, 'llm.neo4j', {})
+      return { url: _.get(cfg, 'url', ''), username: _.get(cfg, 'username', '') }
     }
   },
   LLMMutation: {
@@ -51,8 +58,27 @@ module.exports = {
         }, {})
         _.set(WIKI.config, 'llm.provider', args.provider.key)
         _.set(WIKI.config, ['llm', args.provider.key], cfg)
+        _.set(WIKI.config, 'llm.vectorStore', args.vectorStore)
+        if (args.neo4jConfig) {
+          _.set(WIKI.config, 'llm.neo4j', {
+            url: args.neo4jConfig.url,
+            username: args.neo4jConfig.username,
+            password: args.neo4jConfig.password
+          })
+        }
         await WIKI.configSvc.saveToDb(['llm'])
         if (WIKI.llm) { WIKI.llm.init() }
+        const store = _.get(WIKI.config, 'llm.vectorStore', '')
+        if (store === 'neo4j') {
+          delete require.cache[require.resolve('../../modules/memory/neo4j')]
+          WIKI.memory = require('../../modules/memory/neo4j')
+        } else if (store === 'pgvector') {
+          delete require.cache[require.resolve('../../modules/memory/vector')]
+          WIKI.memory = require('../../modules/memory/vector')
+        } else {
+          WIKI.memory = null
+        }
+        if (WIKI.memory && _.isFunction(WIKI.memory.init)) { WIKI.memory.init() }
         return {
           responseResult: graphHelper.generateSuccess('LLM configuration updated successfully')
         }

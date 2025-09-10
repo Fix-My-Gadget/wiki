@@ -24,7 +24,27 @@ async function chatAskResolver(obj, args, context) {
   }
 
   let contextDocs = []
-  if (WIKI.data.searchEngine) {
+  if (WIKI.memory && _.isFunction(WIKI.llm.embed) && _.get(WIKI.config, 'llm.vectorStore')) {
+    try {
+      const qEmbedding = await WIKI.llm.embed(args.question)
+      const memories = await WIKI.memory.search(qEmbedding, { limit: 5 })
+      for (const mem of memories) {
+        try {
+          const page = await WIKI.models.pages.getPageFromDb(mem.pageId)
+          if (page && WIKI.auth.checkAccess(context.req.user, ['read:pages'], { path: page.path, locale: page.localeCode, tags: page.tags })) {
+            const memoryPage = await WIKI.models.pages.getPageFromDb(mem.memoryPageId)
+            if (memoryPage && memoryPage.content) {
+              contextDocs.push(memoryPage.content)
+            }
+          }
+        } catch (err) {
+          WIKI.logger.warn('(CHAT) Failed to fetch memory page', err)
+        }
+      }
+    } catch (err) {
+      WIKI.logger.warn('(CHAT) Memory search failed', err)
+    }
+  } else if (WIKI.data.searchEngine) {
     try {
       const resp = await WIKI.data.searchEngine.query(args.question, {})
       const permitted = resp.results.filter(r => {

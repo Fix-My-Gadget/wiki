@@ -26,5 +26,11 @@ module.exports = {
       throw new Error('LLM provider not initialized')
     }
     return this.engine.generate(prompt, contextDocs, options)
+  },
+  async embed(input) {
+    if (!this.engine || !_.isFunction(this.engine.embed)) {
+      return []
+    }
+    return this.engine.embed(input)
   }
 }
