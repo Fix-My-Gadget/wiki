@@ -160,16 +160,25 @@ export default {
     async save () {
       this.$store.commit(`loadingStart`, 'admin-llm-save')
       try {
+        const variables = {
+          provider: {
+            key: this.selectedProvider,
+            config: this.provider.config.map(cfg => ({ ...cfg, value: JSON.stringify({ v: cfg.value.value }) }))
+          },
+          vectorStore: this.vectorStore
+        }
+        if (this.vectorStore === 'neo4j') {
+          variables.neo4jConfig = {
+            url: this.neo4jConfig.url,
+            username: this.neo4jConfig.username
+          }
+          if (this.neo4jConfig.password) {
+            variables.neo4jConfig.password = this.neo4jConfig.password
+          }
+        }
         const resp = await this.$apollo.mutate({
           mutation: saveProviderMutation,
-          variables: {
-            provider: {
-              key: this.selectedProvider,
-              config: this.provider.config.map(cfg => ({ ...cfg, value: JSON.stringify({ v: cfg.value.value }) }))
-            },
-            vectorStore: this.vectorStore,
-            neo4jConfig: this.vectorStore === 'neo4j' ? this.neo4jConfig : null
-          }
+          variables
         })
         if (_.get(resp, 'data.llm.updateProvider.responseResult.succeeded', false)) {
           this.$store.commit('showNotification', {
