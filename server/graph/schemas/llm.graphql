@@ -17,6 +17,7 @@ extend type Mutation {
 type LLMQuery {
   providers(orderBy: String): [LLMProvider] @auth(requires: ["manage:system"])
   vectorStore: String @auth(requires: ["manage:system"])
+  neo4jConfig: Neo4jConfig @auth(requires: ["manage:system"])
 }
 
 # -----------------------------------------------
@@ -24,7 +25,7 @@ type LLMQuery {
 # -----------------------------------------------
 
 type LLMMutation {
-  updateProvider(provider: LLMProviderInput!, vectorStore: String!): DefaultResponse @auth(requires: ["manage:system"])
+  updateProvider(provider: LLMProviderInput!, vectorStore: String!, neo4jConfig: Neo4jConfigInput): DefaultResponse @auth(requires: ["manage:system"])
 }
 
 # -----------------------------------------------
@@ -45,5 +46,16 @@ type LLMProvider {
 input LLMProviderInput {
   key: String!
   config: [KeyValuePairInput]
+}
+
+input Neo4jConfigInput {
+  url: String!
+  username: String!
+  password: String!
+}
+
+type Neo4jConfig {
+  url: String
+  username: String
 }
 
